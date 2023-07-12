@@ -1,10 +1,17 @@
 import './App.css';
+import { Coach } from './components/Coach';
+
+
 function App() {
 
 
   return (
     <div className="App">
-      hello world
+      
+      <Coach />
+
+
+
 
     </div>
   );
