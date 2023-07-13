@@ -57,7 +57,7 @@ export const Coach = () => {
 
     const handleReseting = async () => {
         try {
-            await axios.put(`https://booking-api-tz2p.onrender.com/resetAll`);
+            await axios.put(`https://booking-api-tz2p.onrender.com/seats/resetAll`);
             allSeats()
 
         } catch (error) {
