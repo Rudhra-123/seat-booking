@@ -22,7 +22,7 @@ export const Coach = () => {
 
     const allSeats = async () => {
         try {
-            const res = await axios.get("http://localhost:8080/seats");
+            const res = await axios.get("https://booking-api-tz2p.onrender.com/seats");
             setAllSeatsData(res.data)
         } catch (error) {
             console.log("error while fetching the data", error.message)
@@ -40,7 +40,7 @@ export const Coach = () => {
 
         try {
 
-            const resp = await axios.put(`http://localhost:8080/seats/${requiredSeats}`);
+            const resp = await axios.put(`https://booking-api-tz2p.onrender.com/seats/${requiredSeats}`);
             console.log(resp.data)
             allSeats()
             setRequiredSeats("")
@@ -57,7 +57,7 @@ export const Coach = () => {
 
     const handleReseting = async () => {
         try {
-            await axios.put(`http://localhost:8080/seats/resetAll`);
+            await axios.put(`https://booking-api-tz2p.onrender.com/resetAll`);
             allSeats()
 
         } catch (error) {
