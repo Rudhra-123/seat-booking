@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
     try {
-        const allseats = await Seats.find().lean().exec();
+        const allseats = await Seats.find().sort({seatNo:1}).lean().exec();
         res.send(allseats);
     } catch (e) {
         res.status(500).json({ message: e.message })
@@ -41,9 +41,14 @@ router.put("/resetAll", async (req, res) => {
 router.put("/:requiredSeats", async (req, res) => {
     console.log("in required one")
     const requiredSeats = parseInt(req.params.requiredSeats);
+    // Validate the requiredSeats value
+    if (requiredSeats < 1 || requiredSeats > 7) {
+        return res.status(400).json({ message: "Invalid input. Please enter a value between 1 and 7." });
+    }
     const availableSeats = await Seats.find({ status: true }).sort({ seatNo: 1 });
 
     let seatsBooked = false;
+    let bookedSeats = [];
 
     for (let i = 0; i < availableSeats.length; i++) {
         const currentSeat = availableSeats[i];
@@ -55,8 +60,9 @@ router.put("/:requiredSeats", async (req, res) => {
 
         if (rowSeats.length >= requiredSeats) {
             try {
+                bookedSeats = rowSeats.slice(0, requiredSeats)
                 const seatIdsToUpdate = rowSeats.slice(0, requiredSeats).map((seat) => seat._id);
-
+                console.log(bookedSeats)
                 await Seats.updateMany(
                     { _id: { $in: seatIdsToUpdate } },
                     { $set: { status: false } }
@@ -74,7 +80,7 @@ router.put("/:requiredSeats", async (req, res) => {
 
     // Check if seats were successfully booked
     if (seatsBooked) {
-        res.status(201).json({ message: "Seats booked successfully. if available in the row" });
+        res.status(201).send(bookedSeats);
     } else {
         const closestSeatsAvailableToUpdate = closestSeats(availableSeats, requiredSeats);
         try {
@@ -83,7 +89,7 @@ router.put("/:requiredSeats", async (req, res) => {
                 { _id: { $in: closestSeatsIDsToUpdate } },
                 { $set: { status: false } }
             );
-            res.status(201).send(closestUpdated)
+            res.status(201).send(closestSeatsAvailableToUpdate)
 
         } catch (error) {
 
