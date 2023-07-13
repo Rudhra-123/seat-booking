@@ -18,11 +18,11 @@ export const Coach = () => {
         try {
             const res = await axios.get(`${Proxy}`);
             setAllSeatsData(res.data); // this sets the allSeatsData which basically shown  on the UI
+            
         } catch (error) {
             console.log("error while fetching the data", error.message);
         }
     };
-
 
 
     // this function handles the input change and it sets the requiredSeats. 
