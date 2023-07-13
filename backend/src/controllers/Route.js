@@ -4,6 +4,7 @@ const router = express.Router();
 const seatArray = require("../data")
 
 
+
 router.post("/", async (req, res) => {
     try {
         // const totalseats = await Seats.find();
@@ -18,7 +19,15 @@ router.post("/", async (req, res) => {
 
 router.get("/", async (req, res) => {
     try {
-        const allseats = await Seats.find().sort({seatNo:1}).lean().exec();
+        const allseats = await Seats.find().sort({ seatNo: 1 }).lean().exec();
+        res.send(allseats);
+    } catch (e) {
+        res.status(500).json({ message: e.message })
+    }
+});
+router.get("/availableSeats", async (req, res) => {
+    try {
+        const allseats = await Seats.find({ status: true }).sort({ seatNo: 1 }).lean().exec();
         res.send(allseats);
     } catch (e) {
         res.status(500).json({ message: e.message })
@@ -46,6 +55,7 @@ router.put("/:requiredSeats", async (req, res) => {
         return res.status(400).json({ message: "Invalid input. Please enter a value between 1 and 7." });
     }
     const availableSeats = await Seats.find({ status: true }).sort({ seatNo: 1 });
+    // console.log(availableSeats)
 
     let seatsBooked = false;
     let bookedSeats = [];
@@ -80,16 +90,21 @@ router.put("/:requiredSeats", async (req, res) => {
 
     // Check if seats were successfully booked
     if (seatsBooked) {
-        res.status(201).send(bookedSeats);
+        res.status(201).json({ message: "booked seats successfully in a row", updatedSeats: bookedSeats });
     } else {
+
+        // console.log(availableSeats)
+
         const closestSeatsAvailableToUpdate = closestSeats(availableSeats, requiredSeats);
+        const closestSeatsIDsToUpdate = closestSeatsAvailableToUpdate.map((seat) => seat._id);
+        console.log(closestSeatsAvailableToUpdate);
+        console.log(closestSeatsIDsToUpdate);
         try {
-            const closestSeatsIDsToUpdate = closestSeatsAvailableToUpdate.map((seat) => seat._id);
             const closestUpdated = await Seats.updateMany(
                 { _id: { $in: closestSeatsIDsToUpdate } },
                 { $set: { status: false } }
             );
-            res.status(201).send(closestSeatsAvailableToUpdate)
+            res.status(201).json({ message: "booked seats successfully closest available", updatedSeats: closestSeatsAvailableToUpdate })
 
         } catch (error) {
 
@@ -102,23 +117,177 @@ router.put("/:requiredSeats", async (req, res) => {
 });
 
 
-
 const closestSeats = (seatsArray, seatWindow) => {
-    seatsArray.sort((a, b) => a.seatNo - b.seatNo)
+    // Sort the seats array based on seat number
+    seatsArray.sort((a, b) => a.seatNo - b.seatNo);
+
     let minDistance = Infinity;
-    let closestSeatsAvailable = [];
-    for (let i = 0; i < seatsArray.length - seatWindow; i++) {
-        const currentDistance = seatsArray[i + seatWindow - 1].seatNo - seatsArray[i].seatNo
+    let closestWindow = seatsArray.slice(0, seatWindow);
+
+    for (let i = 1; i <= seatsArray.length - seatWindow; i++) {
+        let currentWindow = seatsArray.slice(i, i + seatWindow);
+        const currentDistance = currentWindow[seatWindow - 1].seatNo - currentWindow[0].seatNo;
 
         if (currentDistance < minDistance) {
             minDistance = currentDistance;
-            closestSeatsAvailable = seatsArray.slice(i, i + seatWindow)
+            closestWindow = currentWindow;
         }
     }
-    return closestSeatsAvailable
+
+    return closestWindow;
 }
 
 
+
+
+const avs = [
+    {
+        seatNo: 6,
+        status: true,
+        row: 1,
+
+    },
+    {
+        seatNo: 7,
+        status: true,
+        row: 1,
+
+    },
+    {
+        seatNo: 14,
+        status: true,
+        row: 2,
+
+    },
+    {
+        seatNo: 19,
+        status: true,
+        row: 3,
+
+    },
+    {
+        seatNo: 20,
+        status: true,
+        row: 3,
+
+    },
+    {
+        seatNo: 21,
+        status: true,
+        row: 3,
+
+    },
+    {
+        seatNo: 27,
+        status: true,
+        row: 4,
+
+    },
+    {
+        seatNo: 28,
+        status: true,
+        row: 4,
+
+    },
+    {
+        seatNo: 35,
+        status: true,
+        row: 5,
+
+    },
+    {
+        seatNo: 48,
+        status: true,
+        row: 7,
+
+    },
+    {
+        seatNo: 49,
+        status: true,
+        row: 7,
+
+    },
+    {
+        seatNo: 54,
+        status: true,
+        row: 8,
+
+    },
+    {
+        seatNo: 55,
+        status: true,
+        row: 8,
+
+    },
+    {
+        seatNo: 56,
+        status: true,
+        row: 8,
+
+    },
+    {
+        seatNo: 62,
+        status: true,
+        row: 9,
+
+    },
+    {
+        seatNo: 63,
+        status: true,
+        row: 9,
+
+    },
+    {
+        seatNo: 68,
+        status: true,
+        row: 10,
+
+    },
+    {
+        seatNo: 69,
+        status: true,
+        row: 10,
+
+    },
+    {
+        seatNo: 70,
+        status: true,
+        row: 10,
+
+    },
+    {
+        seatNo: 76,
+        status: true,
+        row: 11,
+
+    },
+    {
+        seatNo: 77,
+        status: true,
+        row: 11,
+
+    },
+    {
+        seatNo: 78,
+        status: true,
+        row: 12,
+
+    },
+    {
+        seatNo: 79,
+        status: true,
+        row: 12,
+
+    },
+    {
+        seatNo: 80,
+        status: true,
+        row: 12,
+
+    }
+]
+
+console.log(closestSeats(avs, 5))
 
 
 
