@@ -93,6 +93,10 @@ router.put("/:requiredSeats", async (req, res) => {
         res.status(201).json({ message: "booked seats successfully in a row", updatedSeats: bookedSeats });
     } else {
 
+        if (requiredSeats > availableSeats.length) {
+            return res.status(201).json({ message: "these many seats are not available" ,})
+
+        }
         // console.log(availableSeats)
 
         const closestSeatsAvailableToUpdate = closestSeats(availableSeats, requiredSeats);

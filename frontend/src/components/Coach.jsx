@@ -3,14 +3,15 @@ import "./coach.css";
 import axios from "axios";
 import { Notification } from './Notification/Notification';
 
-// const Proxy = "http://localhost:8080/seats";   // the basee URL 
-const Proxy = "https://booking-api-tz2p.onrender.com/seats";   // the deployed URL
+const Proxy = "http://localhost:8080/seats";   // the basee URL 
+// const Proxy = "https://booking-api-tz2p.onrender.com/seats";   // the deployed URL
 
 export const Coach = () => {
     const [requiredSeats, setRequiredSeats] = useState("");
     const [allSeatsdata, setAllSeatsData] = useState([]);
     const [showError, setShowError] = useState(false);
     const [currentBookedSeats, setCurrentBookedSeats] = useState([]);
+    const [message, setMessage] = useState("")
 
 
     // this is the function which gets all the seats and set the data as AllSeatsData it run when the application is runs for that first time and if there is chanage in the currentbookedSeats
@@ -18,7 +19,7 @@ export const Coach = () => {
         try {
             const res = await axios.get(`${Proxy}`);
             setAllSeatsData(res.data); // this sets the allSeatsData which basically shown  on the UI
-            
+
         } catch (error) {
             console.log("error while fetching the data", error.message);
         }
@@ -46,14 +47,21 @@ export const Coach = () => {
     const handleBooking = async () => {
         if (!validateInput()) {
             setShowError(true); // Show error message if input is invalid
+            setMessage("Invalid input. Please enter a value between 1 and 7.")
             setRequiredSeats(""); // if the input is invalid then it sets the requiredSeats to empty
             return;
         }
         // if the code is valid then this opration gets executed to book the seats which are available.
         try {
             const resp = await axios.put(`${Proxy}/${requiredSeats}`); // it sends the put request to the server with the requiredSeats parameter
-            console.log(resp.data);
-            setCurrentBookedSeats(resp.data.updatedSeats); // this sets the currently booked seats and this is used to show the the seats on the UI
+            if (resp.data.updatedSeats) {
+                setCurrentBookedSeats(resp.data.updatedSeats); // this sets the currently booked seats and this is used to show the the seats on the UI
+
+            } else {
+                setShowError(true);
+                setMessage(resp.data.message)
+
+            }
 
         } catch (error) {
             console.log("error while booking the seats", error.message);
@@ -140,7 +148,7 @@ export const Coach = () => {
             </div>
 
             {showError && (
-                <Notification message="Invalid input. Please enter a value between 1 and 7." />
+                <Notification message={message} />
             )}
         </div>
     );
