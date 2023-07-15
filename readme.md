@@ -32,23 +32,23 @@ The system checks each row to determine if there are enough consecutive availabl
 - The system books the seats in that row, marking them as "Booked" and updating their availability status.
 
 
-![App Screenshot](https://drive.google.com/file/d/1Kbke43Vygkse7TD7KPE3jM_VwC2bGfmB/view?usp=sharing)
+![App Screenshot](./screenshots/Screenshot%20(14).png)
 
 here the required seates are available to book in a row. So 
 system booked the seats in that row
 
-![App Screenshot](https://drive.google.com/file/d/1vxHHWhBgDC2kOXeMblzVNX0l3IS_BEEx/view?usp=sharing)
+![App Screenshot](./screenshots/Screenshot%20(15).png)
 
 
-2. If there are not enough consecutive available seats in any row:
+1. If there are not enough consecutive available seats in any row:
 - The system searches for the closest available seats across all rows that can accommodate the requested number of seats.
 - It calculates the distance between each available seat and its neighboring seats to determine the proximity.
 
-![App Screenshot](https://drive.google.com/file/d/1EdzLyoQ-8DVjTnIk9iQZ99mAfCOQ8o_V/view?usp=sharing)
+![App Screenshot](./screenshots/Screenshot%20(16).png)
 
 - The system then selects the seats with the closest proximity, ensuring they are adjacent to each other.
 
-![App Screenshot](https://drive.google.com/file/d/1nyifRpnsiqUAo2cLp5vh3TlGMWLjfI9G/view?usp=sharing)
+![App Screenshot](./screenshots/Screenshot%20(17).png)
 
 - These seats are booked, marked as "Booked," and their availability status is updated.
 
