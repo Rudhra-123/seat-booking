@@ -20,6 +20,17 @@ The Seat Booking System is a web application that allows users to book seats in 
 
 The Seat Booking System is designed to facilitate the booking of seats in a coach. It allows user to view the available seats and make bookings based on the stated logic. The system keeps track of the booked seats and updates the availability status in real-time.
 
+## User Flow
+The typical user flow in the Seat Booking System is as follows:
+
+1. Upon accessing the application, users are presented with the homepage, which displays the coach on the left and in right user can see the status of seats booked or available along with that an input box to put the required seats and two buttons booking and reseting.
+2. Users can view the seat layout and availability, with booked seats indicated as "Booked."
+3. To book a seat, users can fill the input box with how much seats he wants to book and can book by pressing on "Book ticket" button.
+4. Users can view their current booked seats in a designated area on the UI.
+5. To reset all bookings and make all seats available again, users can click the "Reset Bookings" button. This action clears all bookings and updates the seat availability accordingly.
+6. Users can repeat the seat booking process as needed.
+
+
 ## Booking Logic
 
 The Seat Booking System implements the following logic for seat bookings:
