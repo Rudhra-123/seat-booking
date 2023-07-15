@@ -4,7 +4,7 @@ const router = express.Router();
 const seatArray = require("../data")
 
 
-
+// post route for creating seats in the coach
 router.post("/", async (req, res) => {
     try {
         // const totalseats = await Seats.find();
@@ -16,7 +16,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-
+// get route for fetching all the seats 
 router.get("/", async (req, res) => {
     try {
         const allseats = await Seats.find().sort({ seatNo: 1 }).lean().exec();
@@ -25,6 +25,8 @@ router.get("/", async (req, res) => {
         res.status(500).json({ message: e.message })
     }
 });
+
+// route for getting available seats 
 router.get("/availableSeats", async (req, res) => {
     try {
         const allseats = await Seats.find({ status: true }).sort({ seatNo: 1 }).lean().exec();
@@ -34,7 +36,7 @@ router.get("/availableSeats", async (req, res) => {
     }
 });
 
-
+// route for resetting all the seats 
 router.put("/resetAll", async (req, res) => {
 
     try {
@@ -46,7 +48,7 @@ router.put("/resetAll", async (req, res) => {
     }
 });
 
-
+// route for booking seats which takes the params required seats from the frontend
 router.put("/:requiredSeats", async (req, res) => {
     console.log("in required one")
     const requiredSeats = parseInt(req.params.requiredSeats);
@@ -55,7 +57,6 @@ router.put("/:requiredSeats", async (req, res) => {
         return res.status(400).json({ message: "Invalid input. Please enter a value between 1 and 7." });
     }
     const availableSeats = await Seats.find({ status: true }).sort({ seatNo: 1 });
-    // console.log(availableSeats)
 
     let seatsBooked = false;
     let bookedSeats = [];
@@ -91,14 +92,13 @@ router.put("/:requiredSeats", async (req, res) => {
     if (seatsBooked) {
         res.status(201).json({ message: "booked seats successfully in a row", updatedSeats: bookedSeats });
     } else {
-
+        // if seats required seats are not available in any row 
         if (requiredSeats > availableSeats.length) {
             return res.status(201).json({ message: "these many seats are not available", })
 
         }
-        // console.log(availableSeats)
 
-        const closestSeatsAvailableToUpdate = closestSeats(availableSeats, requiredSeats);
+        const closestSeatsAvailableToUpdate = closestSeats(availableSeats, requiredSeats);  // closestSeats is a function which gives the closest seats available for the seats available array. it takes two parameter array , requiredseats
         const closestSeatsIDsToUpdate = closestSeatsAvailableToUpdate.map((seat) => seat._id);
         console.log(closestSeatsAvailableToUpdate);
         console.log(closestSeatsIDsToUpdate);
