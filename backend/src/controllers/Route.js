@@ -72,7 +72,7 @@ router.put("/:requiredSeats", async (req, res) => {
         if (rowSeats.length >= requiredSeats) {
             try {
                 bookedSeats = rowSeats.slice(0, requiredSeats)
-                const seatIdsToUpdate = rowSeats.slice(0, requiredSeats).map((seat) => seat._id);
+                const seatIdsToUpdate = bookedSeats.map((seat) => seat._id);
                 await Seats.updateMany(
                     { _id: { $in: seatIdsToUpdate } },
                     { $set: { status: false } }
@@ -127,7 +127,7 @@ const closestSeats = (seatsArray, seatWindow) => {
     let minDistance = Infinity;
     let closestWindow = seatsArray.slice(0, seatWindow);
 
-    for (let i = 1; i <= seatsArray.length - seatWindow; i++) {
+    for (let i = 0; i <= seatsArray.length - seatWindow; i++) {
         let currentWindow = seatsArray.slice(i, i + seatWindow);
         const currentDistance = currentWindow[seatWindow - 1].seatNo - currentWindow[0].seatNo;
 
