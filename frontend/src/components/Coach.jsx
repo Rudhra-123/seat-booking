@@ -3,8 +3,8 @@ import "./coach.css";
 import axios from "axios";
 import { Notification } from './Notification/Notification';
 
-// const Proxy = "http://localhost:8080/seats";   // the basee URL 
-const Proxy = "https://booking-api-tz2p.onrender.com/seats";   // the deployed URL
+const Proxy = "http://localhost:8080/seats";   // the basee URL 
+// const Proxy = "https://booking-api-tz2p.onrender.com/seats";   // the deployed URL
 
 export const Coach = () => {
     const [requiredSeats, setRequiredSeats] = useState("");

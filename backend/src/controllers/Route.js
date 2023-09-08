@@ -1,11 +1,15 @@
 const express = require("express")
 const Seats = require("../models/seatSchema");
 const router = express.Router();
-const seatArray = require("../data")
+const seatArray = require("../data");
+
+
 
 
 // post route for creating seats in the coach
 router.post("/", async (req, res) => {
+
+
     try {
         // const totalseats = await Seats.find();
         const seat = await Seats.insertMany(seatArray);
@@ -60,16 +64,19 @@ router.put("/:requiredSeats", async (req, res) => {
 
     let seatsBooked = false;
     let bookedSeats = [];
+    let min = Infinity
 
     for (let i = 0; i < availableSeats.length; i++) {
         const currentSeat = availableSeats[i];
         const currentRow = currentSeat.row;
 
+
         const rowSeats = availableSeats.filter(
             (seat) => seat.row === currentRow && seat.status === true
         );
 
-        if (rowSeats.length >= requiredSeats) {
+
+        if (rowSeats.length === requiredSeats) {
             try {
                 bookedSeats = rowSeats.slice(0, requiredSeats)
                 const seatIdsToUpdate = bookedSeats.map((seat) => seat._id);
@@ -84,6 +91,22 @@ router.put("/:requiredSeats", async (req, res) => {
                 return res.status(500).json({ message: error.message });
             }
         }
+        else {
+            try {
+                bookedSeats = rowSeats.slice(0, requiredSeats)
+                const seatIdsToUpdate = bookedSeats.map((seat) => seat._id);
+                await Seats.updateMany(
+                    { _id: { $in: seatIdsToUpdate } },
+                    { $set: { status: false } }
+                );
+
+                seatsBooked = true;
+                break;
+            } catch (error) {
+                return res.status(500).json({ message: error.message });
+            }
+        }
+
     }
 
 
