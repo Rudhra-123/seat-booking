@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "node app.js",
+    "start": "node app.js",
+    "dev": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -18,6 +19,7 @@
     "mongoose": "^7.3.2"
   },
   "engines": {
-    "node": "18.16.1"
+    "npm": "^9.5.1",
+    "node": "^18.16.1"
   }
 }
