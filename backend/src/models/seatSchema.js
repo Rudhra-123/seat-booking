@@ -1,16 +1,52 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require('sequelize');
+const { sequelize } = require('../../configs/db');
 
-// schema for seats in a coach 
-const seatSchema = mongoose.Schema({
-    seatNo: { type: Number, required: true },
-    status: { type: Boolean, required: true },
-    row: { type: Number, required: true }
+const Seat = sequelize.define('Seat', {
+  
+    seatNo: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    unique: 'seat_row_combination',
+  },
+  status: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: true,
+  },
+  row: {
+    type: DataTypes.INTEGER, // Change to STRING if rows are labeled alphabetically
+    allowNull: false,
+    unique: 'seat_row_combination',
+  },
+}, {
+  tableName: 'seats',
+  timestamps: false,
+  underscored: true,
+});
 
-},
-    {
-        versionKey: false,
-        timestamps: true,
-    });
+module.exports = Seat;
 
-const Seats = mongoose.model("seat", seatSchema);
-module.exports = Seats
+
+// const { DataTypes } = require('sequelize');
+// const { sequelize } = require('../../configs/db');
+
+// const Seat = sequelize.define('Seat', {
+//   seat_no: {
+//     type: DataTypes.INTEGER,
+//     allowNull: false,
+//   },
+//   status: {
+//     type: DataTypes.BOOLEAN,
+//     allowNull: false,
+//     defaultValue: true,
+//   },
+//   row: {
+//     type: DataTypes.INTEGER,
+//     allowNull: false,
+//   },
+// }, {
+//   tableName: 'seats',
+//   timestamps: false, // Disable createdAt and updatedAt
+// });
+
+// module.exports = Seat;

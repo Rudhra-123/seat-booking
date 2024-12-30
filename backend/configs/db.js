@@ -1,20 +1,18 @@
-require('dotenv').config()
-const mongoose = require("mongoose");
+require('dotenv').config();
+const { Sequelize } = require('sequelize');
 
-const connect = () => {
-    try {
-        console.log("database Connected")
-        return mongoose.connect(`${process.env.MONGODB_URI}`)
+const sequelize = new Sequelize(process.env.POSTGRES_URI, {
+  dialect: 'postgres',
+  logging: false, // Set to true for detailed logs
+});
 
-    } catch (error) {
-        console.log(`databasee connection failed due to ${error.message}`)
-    }
+const connect = async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connected successfully.');
+  } catch (error) {
+    console.error('Unable to connect to the database:', error.message);
+  }
+};
 
-}
-
-module.exports = connect
-
-
-
-
-
+module.exports = { sequelize, connect };
